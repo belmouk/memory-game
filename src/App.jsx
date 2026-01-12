@@ -20,6 +20,21 @@ const POKEMONS = [
 ];
 
 function App() {
+  const [pokemonList, setPokemonList] = useState(POKEMONS);
+
+  function shuffleList(list) {
+    const shuffledList = [];
+    while (list.length !== 0) {
+      const randomIndex = Math.floor(Math.random() * list.length);
+      shuffledList.push(...list.splice(randomIndex, 1));
+    }
+    return shuffledList;
+  }
+
+  function handleClick() {
+    const shuffledPokemonList = shuffleList(pokemonList);
+    setPokemonList(shuffledPokemonList);
+  }
   return (
     <>
       <header>
@@ -27,12 +42,13 @@ function App() {
       </header>
       <main>
         <Score></Score>
-        {POKEMONS.map((pokemon, index) => {
+        {pokemonList.map((pokemon, index) => {
           return (
             <Card
               name={pokemon.name}
               imageUrl={pokemon.imageUrl}
               key={index}
+              handleClick={handleClick}
             ></Card>
           );
         })}
@@ -43,9 +59,9 @@ function App() {
 
 function Score() {}
 
-function Card({ imageUrl, name }) {
+function Card({ imageUrl, name, handleClick }) {
   return (
-    <div>
+    <div onClick={handleClick}>
       <img src={imageUrl} alt="" />
       <h3>{name}</h3>
     </div>
