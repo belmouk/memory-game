@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 const baseUrl =
@@ -28,9 +28,10 @@ function App() {
 
   function shuffleList(list) {
     const shuffledList = [];
-    while (list.length !== 0) {
-      const randomIndex = Math.floor(Math.random() * list.length);
-      shuffledList.push(...list.splice(randomIndex, 1));
+    const newList = [...list];
+    while (newList.length !== 0) {
+      const randomIndex = Math.floor(Math.random() * newList.length);
+      shuffledList.push(...newList.splice(randomIndex, 1));
     }
     return shuffledList;
   }
@@ -42,8 +43,8 @@ function App() {
       </header>
       <main>
         <div className="score-section">
-          <p>score:{score}</p>
-          <p>Best score:{bestScore}</p>
+          <span>Score: {score}</span>
+          <span>Best score: {bestScore}</span>
         </div>
 
         <div className="card-section">
@@ -59,11 +60,13 @@ function App() {
                       setBestScore(score);
                     }
                     setScore(0);
-                    setPokemonList(POKEMONS.map((p) => ({ ...p })));
+                    setPokemonList(
+                      shuffleList(POKEMONS.map((p) => ({ ...p })))
+                    );
                   } else {
                     const nextPokemonList = pokemonList.map((item) => {
                       if (item.id === pokemon.id) {
-                        item.selected = true;
+                        return { ...item, selected: true };
                       }
                       return item;
                     });
@@ -82,10 +85,10 @@ function App() {
 
 function Card({ imageUrl, name, handleClick }) {
   return (
-    <div onClick={handleClick} className="card">
-      <img src={imageUrl} alt="" />
+    <button onClick={handleClick} className="card">
+      <img src={imageUrl} alt={`${name} pokemon`} />
       <h3>{name}</h3>
-    </div>
+    </button>
   );
 }
 
