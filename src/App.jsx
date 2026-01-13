@@ -5,22 +5,26 @@ const baseUrl =
   "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/pokemon/other/dream-world/100";
 
 const POKEMONS = [
-  { name: "Deoxys", imageUrl: baseUrl + "01.svg" },
-  { name: "Castform", imageUrl: baseUrl + "13.svg" },
-  { name: "Thundurus", imageUrl: baseUrl + "20.svg" },
-  { name: "Cheniselle", imageUrl: baseUrl + "04.svg" },
-  { name: "Kyurem", imageUrl: baseUrl + "23.svg" },
-  { name: "Shaymin", imageUrl: baseUrl + "06.svg" },
-  { name: "Giratina", imageUrl: baseUrl + "07.svg" },
-  { name: "Rotom", imageUrl: baseUrl + "08.svg" },
-  { name: "Basculin", imageUrl: baseUrl + "16.svg" },
-  { name: "Gourgeist", imageUrl: baseUrl + "30.svg" },
-  { name: "Meloetta", imageUrl: baseUrl + "18.svg" },
-  { name: "Tornadus", imageUrl: baseUrl + "19.svg" },
+  { id: 1, name: "Deoxys", imageUrl: baseUrl + "01.svg", selected: false },
+  { id: 2, name: "Castform", imageUrl: baseUrl + "13.svg", selected: false },
+  { id: 3, name: "Thundurus", imageUrl: baseUrl + "20.svg", selected: false },
+  { id: 4, name: "Cheniselle", imageUrl: baseUrl + "04.svg", selected: false },
+  { id: 5, name: "Kyurem", imageUrl: baseUrl + "23.svg", selected: false },
+  { id: 6, name: "Shaymin", imageUrl: baseUrl + "06.svg", selected: false },
+  { id: 7, name: "Giratina", imageUrl: baseUrl + "07.svg", selected: false },
+  { id: 8, name: "Rotom", imageUrl: baseUrl + "08.svg", selected: false },
+  { id: 9, name: "Basculin", imageUrl: baseUrl + "16.svg", selected: false },
+  { id: 10, name: "Gourgeist", imageUrl: baseUrl + "30.svg", selected: false },
+  { id: 11, name: "Meloetta", imageUrl: baseUrl + "18.svg", selected: false },
+  { id: 12, name: "Tornadus", imageUrl: baseUrl + "19.svg", selected: false },
 ];
 
 function App() {
-  const [pokemonList, setPokemonList] = useState(POKEMONS);
+  const [pokemonList, setPokemonList] = useState(
+    shuffleList(POKEMONS.map((p) => ({ ...p })))
+  );
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
 
   function shuffleList(list) {
     const shuffledList = [];
@@ -31,37 +35,54 @@ function App() {
     return shuffledList;
   }
 
-  function handleClick() {
-    const shuffledPokemonList = shuffleList(pokemonList);
-    setPokemonList(shuffledPokemonList);
-  }
   return (
     <>
       <header>
         <h1>Pokemon Memory Game!</h1>
       </header>
       <main>
-        <Score></Score>
-        {pokemonList.map((pokemon, index) => {
-          return (
-            <Card
-              name={pokemon.name}
-              imageUrl={pokemon.imageUrl}
-              key={index}
-              handleClick={handleClick}
-            ></Card>
-          );
-        })}
+        <div className="score-section">
+          <p>score:{score}</p>
+          <p>Best score:{bestScore}</p>
+        </div>
+
+        <div className="card-section">
+          {pokemonList.map((pokemon) => {
+            return (
+              <Card
+                name={pokemon.name}
+                imageUrl={pokemon.imageUrl}
+                key={pokemon.id}
+                handleClick={() => {
+                  if (pokemon.selected) {
+                    if (score > bestScore) {
+                      setBestScore(score);
+                    }
+                    setScore(0);
+                    setPokemonList(POKEMONS.map((p) => ({ ...p })));
+                  } else {
+                    const nextPokemonList = pokemonList.map((item) => {
+                      if (item.id === pokemon.id) {
+                        item.selected = true;
+                      }
+                      return item;
+                    });
+                    setScore(score + 1);
+                    setPokemonList(shuffleList(nextPokemonList));
+                  }
+                }}
+              ></Card>
+            );
+          })}
+        </div>
       </main>
     </>
   );
 }
 
-function Score() {}
-
 function Card({ imageUrl, name, handleClick }) {
   return (
-    <div onClick={handleClick}>
+    <div onClick={handleClick} className="card">
       <img src={imageUrl} alt="" />
       <h3>{name}</h3>
     </div>
