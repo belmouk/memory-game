@@ -12,7 +12,7 @@ const POKEMONS = [
   { id: 5, name: "Kyurem", imageUrl: baseUrl + "23.svg", selected: false },
   { id: 6, name: "Shaymin", imageUrl: baseUrl + "06.svg", selected: false },
   { id: 7, name: "Giratina", imageUrl: baseUrl + "07.svg", selected: false },
-  { id: 8, name: "Rotom", imageUrl: baseUrl + "08.svg", selected: false },
+  { id: 8, name: "Pumpkaboo", imageUrl: baseUrl + "27.svg", selected: false },
   { id: 9, name: "Basculin", imageUrl: baseUrl + "16.svg", selected: false },
   { id: 10, name: "Gourgeist", imageUrl: baseUrl + "30.svg", selected: false },
   { id: 11, name: "Meloetta", imageUrl: baseUrl + "18.svg", selected: false },
@@ -86,7 +86,9 @@ function App() {
 function Card({ imageUrl, name, handleClick }) {
   return (
     <button onClick={handleClick} className="card">
-      <img src={imageUrl} alt={`${name} pokemon`} />
+      <div className="card-image">
+        <img src={imageUrl} alt={`${name} pokemon`} />
+      </div>
       <h3>{name}</h3>
     </button>
   );
